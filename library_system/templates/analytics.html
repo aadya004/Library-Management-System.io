@@ -1,0 +1,117 @@
+{% extends "base.html" %}
+{% block title %}Analytics – LibraCore{% endblock %}
+{% block page_title %}Analytics Dashboard{% endblock %}
+{% block content %}
+
+<div class="stats-grid" style="margin-bottom:24px">
+  <div class="stat-card">
+    <div class="stat-icon" style="background:rgba(201,162,39,0.12)"><i class="fas fa-book-open" style="color:var(--accent)"></i></div>
+    <div class="stat-label">Total Books</div>
+    <div class="stat-value">{{ total_books }}</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-icon" style="background:rgba(139,107,63,0.12)"><i class="fas fa-users" style="color:var(--accent2)"></i></div>
+    <div class="stat-label">Total Members</div>
+    <div class="stat-value">{{ total_users }}</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-icon" style="background:rgba(255,179,71,0.12)"><i class="fas fa-hand-holding-heart" style="color:var(--warning)"></i></div>
+    <div class="stat-label">Total Borrows</div>
+    <div class="stat-value">{{ stats.total_borrows }}</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-icon" style="background:rgba(139,107,63,0.12)"><i class="fas fa-rotate-left" style="color:var(--accent2)"></i></div>
+    <div class="stat-label">Returned</div>
+    <div class="stat-value">{{ stats.returned }}</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-icon" style="background:rgba(201,162,39,0.12)"><i class="fas fa-clock" style="color:var(--accent)"></i></div>
+    <div class="stat-label">Active</div>
+    <div class="stat-value">{{ stats.active }}</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-icon" style="background:rgba(139,107,63,0.12)"><i class="fas fa-triangle-exclamation" style="color:var(--danger)"></i></div>
+    <div class="stat-label">Overdue</div>
+    <div class="stat-value" style="color:{% if stats.overdue > 0 %}var(--danger){% else %}var(--accent2){% endif %}">{{ stats.overdue }}</div>
+  </div>
+</div>
+
+<div class="chart-grid">
+  <div class="chart-container">
+    <div id="chart-most-borrowed"></div>
+  </div>
+  <div class="chart-container">
+    <div id="chart-category"></div>
+  </div>
+</div>
+
+<div style="display:grid;grid-template-columns:3fr 2fr;gap:20px;margin-bottom:24px">
+  <div class="chart-container">
+    <div id="chart-trend"></div>
+  </div>
+  <div class="chart-container">
+    <div id="chart-users"></div>
+  </div>
+</div>
+
+<div class="chart-grid">
+  <div class="chart-container">
+    <div id="chart-demand"></div>
+  </div>
+  <div class="chart-container">
+    <div id="chart-top-borrowed"></div>
+  </div>
+</div>
+
+<div class="card" style="margin-bottom:24px">
+  <div class="card-header"><span class="card-title"><i class="fas fa-chart-simple" style="color:var(--accent)"></i> Analytics Summary</span></div>
+  <div class="card-body" style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px">
+    <div class="stat-card" style="padding:16px; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.08);">
+      <div class="stat-label">Top Category</div>
+      <div class="stat-value">{{ popular_category }}</div>
+    </div>
+    <div class="stat-card" style="padding:16px; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.08);">
+      <div class="stat-label">Average Borrow Duration</div>
+      <div class="stat-value">{{ average_duration }}</div>
+    </div>
+    <div class="stat-card" style="padding:16px; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.08);">
+      <div class="stat-label">Active Borrows</div>
+      <div class="stat-value">{{ total_active_borrows }}</div>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header"><span class="card-title"><i class="fas fa-fire" style="color:var(--accent2)"></i> Trending Books</span></div>
+  <div class="card-body">
+    <table style="width:100%;border-collapse:collapse;">
+      <thead>
+        <tr>
+          <th style="text-align:left;padding:12px;color:var(--text-secondary)">Title</th>
+          <th style="text-align:right;padding:12px;color:var(--text-secondary)">Demand Score</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for score, title, bid in top_trending %}
+        <tr>
+          <td style="padding:12px;border-top:1px solid rgba(255,255,255,0.08);">{{ title }}</td>
+          <td style="padding:12px;border-top:1px solid rgba(255,255,255,0.08);text-align:right;">{{ score }}</td>
+        </tr>
+        {% else %}
+        <tr><td colspan="2" style="text-align:center;padding:24px;color:var(--text-secondary)">No trending book data available.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<script>
+const cfg = { responsive: true, displayModeBar: false };
+Plotly.newPlot('chart-most-borrowed', {{ chart_most_borrowed|safe }}.data, {{ chart_most_borrowed|safe }}.layout, cfg);
+Plotly.newPlot('chart-category', {{ chart_category|safe }}.data, {{ chart_category|safe }}.layout, cfg);
+Plotly.newPlot('chart-trend', {{ chart_trend|safe }}.data, {{ chart_trend|safe }}.layout, cfg);
+Plotly.newPlot('chart-users', {{ chart_users|safe }}.data, {{ chart_users|safe }}.layout, cfg);
+Plotly.newPlot('chart-demand', {{ chart_demand|safe }}.data, {{ chart_demand|safe }}.layout, cfg);
+Plotly.newPlot('chart-top-borrowed', {{ chart_top_borrowed|safe }}.data, {{ chart_top_borrowed|safe }}.layout, cfg);
+</script>
+{% endblock %}

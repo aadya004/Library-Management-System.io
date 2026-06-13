@@ -1,0 +1,111 @@
+{% extends "base.html" %}
+{% block title %}Circulation Log – LibraCore{% endblock %}
+{% block page_title %}Circulation Log{% endblock %}
+{% block content %}
+
+<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:22px;flex-wrap:wrap;gap:14px;">
+  <div>
+    <h2 style="font-family:'Cinzel',serif;font-size:22px;font-weight:700">Circulation Log</h2>
+    <p style="color:var(--text-secondary);font-size:13px;margin-top:2px">Comprehensive activity timeline of all library operations.</p>
+  </div>
+  <span class="badge badge-info">{{ log_entries|length }} events</span>
+</div>
+
+{% if log_entries %}
+<div class="card">
+  <div class="card-body">
+    <div class="timeline">
+      {% for entry in log_entries %}
+      <div style="display:grid;grid-template-columns:auto 1fr;gap:20px;padding:20px 0;border-bottom:1px solid rgba(255,255,255,0.04);">
+        <!-- Timeline dot and line -->
+        <div style="display:flex;flex-direction:column;align-items:center;gap:8px;padding-top:2px;">
+          <!-- Icon based on action type -->
+          <div style="width:40px;height:40px;border-radius:12px;display:grid;place-items:center;font-size:18px;
+            {% if entry.action == 'borrow' %}background:rgba(91,124,77,0.2);color:#5B7C4D;
+            {% elif entry.action == 'return' %}background:rgba(139,107,63,0.2);color:var(--accent2);
+            {% elif entry.action == 'queue' %}background:rgba(201,162,39,0.2);color:var(--accent);
+            {% else %}background:rgba(139,107,63,0.2);color:var(--accent2);
+            {% endif %}">
+            {% if entry.action == 'borrow' %}<i class="fas fa-arrow-right"></i>
+            {% elif entry.action == 'return' %}<i class="fas fa-rotate-left"></i>
+            {% elif entry.action == 'queue' %}<i class="fas fa-clock"></i>
+            {% else %}<i class="fas fa-book"></i>
+            {% endif %}
+          </div>
+          <div style="width:2px;height:40px;background:rgba(255,255,255,0.1);"></div>
+        </div>
+
+        <!-- Event content -->
+        <div style="padding-top:4px;">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap;margin-bottom:8px;">
+            <div>
+              <p style="margin:0;font-size:14px;font-weight:600;color:var(--text-primary);">{{ entry.details }}</p>
+              <div style="margin-top:6px;display:flex;gap:12px;flex-wrap:wrap;">
+                <span style="font-size:12px;color:var(--text-secondary);background:rgba(255,255,255,0.03);padding:4px 10px;border-radius:12px;">
+                  <strong>{{ entry.member }}</strong>
+                </span>
+                <span style="font-size:12px;color:var(--text-secondary);background:rgba(255,255,255,0.03);padding:4px 10px;border-radius:12px;">
+                  "{{ entry.book[:35] }}{% if entry.book|length > 35 %}...{% endif %}"
+                </span>
+              </div>
+            </div>
+            <span class="badge {% if entry.action == 'borrow' %}badge-success
+              {% elif entry.action == 'return' %}badge-info
+              {% elif entry.action == 'queue' %}badge-warning
+              {% else %}badge-gray{% endif %}" style="font-size:10px;text-transform:uppercase;white-space:nowrap;">
+              {{ entry.action }}
+            </span>
+          </div>
+          <div style="font-size:12px;color:var(--text-muted);">
+            <i class="fas fa-calendar"></i> {{ entry.timestamp[:16].replace('T', ' ') }}
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+<!-- Activity Legend -->
+<div class="card" style="margin-top:24px;">
+  <div class="card-header">
+    <span class="card-title">Activity Types</span>
+  </div>
+  <div class="card-body">
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;">
+      <div style="display:flex;gap:12px;">
+        <div style="width:12px;height:12px;border-radius:8px;background:#5B7C4D;margin-top:2px;flex-shrink:0;"></div>
+        <div>
+          <div style="font-size:13px;font-weight:600;color:var(--text-primary);">Borrow</div>
+          <p style="margin:4px 0 0;font-size:12px;color:var(--text-secondary);">Book issued to member</p>
+        </div>
+      </div>
+      <div style="display:flex;gap:12px;">
+        <div style="width:12px;height:12px;border-radius:8px;background:var(--accent2);margin-top:2px;flex-shrink:0;"></div>
+        <div>
+          <div style="font-size:13px;font-weight:600;color:var(--text-primary);">Return</div>
+          <p style="margin:4px 0 0;font-size:12px;color:var(--text-secondary);">Book returned by member</p>
+        </div>
+      </div>
+      <div style="display:flex;gap:12px;">
+        <div style="width:12px;height:12px;border-radius:8px;background:var(--accent);margin-top:2px;flex-shrink:0;"></div>
+        <div>
+          <div style="font-size:13px;font-weight:600;color:var(--text-primary);">Queue</div>
+          <p style="margin:4px 0 0;font-size:12px;color:var(--text-secondary);">Member added to reservation queue</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% else %}
+<div class="card" style="padding:48px 24px;">
+  <div class="empty-state" style="padding:0;">
+    <i class="fas fa-receipt" style="font-size:48px;color:rgba(255,255,255,0.16);"></i>
+    <p style="margin-top:16px;font-size:18px;font-weight:600;color:var(--text-primary);">No activity recorded.</p>
+    <p style="font-size:13px;color:var(--text-secondary);margin-top:8px;max-width:420px;">Library operations will be logged here once circulation begins.</p>
+  </div>
+</div>
+{% endif %}
+
+{% endblock %}

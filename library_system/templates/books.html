@@ -1,0 +1,127 @@
+{% extends "base.html" %}
+{% block title %}Books – LibraCore{% endblock %}
+{% block page_title %}Book Inventory{% endblock %}
+{% block content %}
+
+<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:22px;flex-wrap:wrap;gap:12px;">
+  <div>
+    <h2 style="font-family:'Cinzel',serif;font-size:22px;font-weight:700">Books</h2>
+    <p style="color:var(--text-secondary);font-size:13px;margin-top:2px">{{ books|length }} books found</p>
+  </div>
+  <div style="display:flex;gap:10px;flex-wrap:wrap;">
+    <button onclick="document.getElementById('importModal').classList.add('open')" class="btn btn-ghost"><i class="fas fa-file-import"></i> Bulk Import</button>
+    <a href="/books/add" class="btn btn-primary"><i class="fas fa-plus"></i> Add Book</a>
+  </div>
+</div>
+
+<div class="card" style="margin-bottom:20px">
+  <div class="card-body" style="padding:14px 18px">
+    <form method="get" class="search-bar" style="margin:0">
+      <div class="search-input-wrap">
+        <i class="fas fa-search"></i>
+        <input class="form-control search-input" name="q" value="{{ query }}" placeholder="Search books…" style="margin:0">
+      </div>
+      <select class="form-control" name="field" style="width:160px">
+        <option value="title" {% if field=='title' %}selected{% endif %}>By Title</option>
+        <option value="author" {% if field=='author' %}selected{% endif %}>By Author</option>
+        <option value="category" {% if field=='category' %}selected{% endif %}>By Category</option>
+      </select>
+      <button type="submit" class="btn btn-primary"><i class="fas fa-search"></i> Search</button>
+      {% if query %}<a href="/books" class="btn btn-ghost"><i class="fas fa-xmark"></i> Clear</a>{% endif %}
+    </form>
+  </div>
+</div>
+
+{% if query %}
+<div style="margin-bottom:12px;color:var(--text-secondary);font-size:13px">
+  <i class="fas fa-info-circle" style="color:var(--accent)"></i>
+  Using binary search on <strong style="color:var(--text-primary)">{{ field }}</strong> for "<strong style="color:var(--text-primary)">{{ query }}</strong>" — {{ books|length }} result(s)
+</div>
+{% endif %}
+
+<div class="card">
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr><th>ID</th><th>Title</th><th>Author</th><th>Category</th><th>ISBN</th><th>Year</th><th>Copies</th><th>Available</th><th>Actions</th></tr>
+      </thead>
+      <tbody>
+        {% for book in books %}
+        <tr>
+          <td style="font-family:monospace;font-size:12px;color:var(--text-secondary)">{{ book.id }}</td>
+          <td><strong>{{ book.title }}</strong></td>
+          <td style="color:var(--text-secondary)">{{ book.author }}</td>
+          <td><span class="badge badge-info">{{ book.category }}</span></td>
+          <td style="font-size:12px;color:var(--text-muted)">{{ book.isbn or '—' }}</td>
+          <td style="color:var(--text-secondary)">{{ book.year or '—' }}</td>
+          <td>{{ book.copies }}</td>
+          <td>
+            {% if book.copies_available > 0 %}
+              <span class="badge badge-success">{{ book.copies_available }}</span>
+            {% else %}
+              <span class="badge badge-danger">0</span>
+            {% endif %}
+          </td>
+          <td>
+            <div style="display:flex;gap:6px">
+              <a href="/books/edit/{{ book.id }}" class="btn btn-ghost btn-sm"><i class="fas fa-pen"></i></a>
+              <form method="post" action="/books/delete/{{ book.id }}" onsubmit="return confirm('Delete this book?')">
+                <button type="submit" class="btn btn-danger btn-sm"><i class="fas fa-trash"></i></button>
+              </form>
+            </div>
+          </td>
+        </tr>
+        {% else %}
+        <tr><td colspan="9"><div class="empty-state"><i class="fas fa-books"></i><p>No books found.</p></div></td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Bulk Import Modal -->
+<div class="modal-backdrop" id="importModal">
+  <div class="modal">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
+      <div class="modal-title"><i class="fas fa-file-import" style="color:var(--accent)"></i> Bulk Import Books</div>
+      <button onclick="document.getElementById('importModal').classList.remove('open')" class="btn btn-ghost btn-sm"><i class="fas fa-xmark"></i></button>
+    </div>
+    <div style="background:var(--bg-dark);border:1px solid var(--border);border-radius:8px;padding:14px;margin-bottom:16px;font-size:12px;color:var(--text-secondary)">
+      <strong style="color:var(--text-primary)">CSV Format:</strong><br>
+      <code style="color:var(--accent2)">title, author, category, isbn, year, copies</code><br><br>
+      <strong style="color:var(--text-primary)">Example:</strong><br>
+      <code>Clean Architecture, Robert C. Martin, Computer Science, 9780134494166, 2017, 3</code>
+    </div>
+    <div class="upload-zone" onclick="document.getElementById('bookFile').click()">
+      <i class="fas fa-cloud-arrow-up" style="display:block;margin:0 auto 10px;font-size:30px;color:var(--text-muted)"></i>
+      <p style="color:var(--text-secondary);font-size:13px">Click to upload CSV file</p>
+      <p id="fileName" style="color:var(--accent);font-size:12px;margin-top:6px"></p>
+    </div>
+    <input type="file" id="bookFile" accept=".csv" style="display:none" onchange="document.getElementById('fileName').textContent=this.files[0]?.name||''">
+    <div id="importResult" style="margin-top:12px;font-size:13px"></div>
+    <div style="display:flex;gap:10px;margin-top:18px;justify-content:flex-end">
+      <button onclick="document.getElementById('importModal').classList.remove('open')" class="btn btn-ghost">Cancel</button>
+      <button onclick="doBulkImport()" class="btn btn-primary"><i class="fas fa-upload"></i> Import</button>
+    </div>
+  </div>
+</div>
+
+<script>
+async function doBulkImport() {
+  const file = document.getElementById('bookFile').files[0];
+  if (!file) { alert('Please select a CSV file.'); return; }
+  const fd = new FormData();
+  fd.append('file', file);
+  const res = await fetch('/books/bulk_import', { method: 'POST', body: fd });
+  const data = await res.json();
+  const el = document.getElementById('importResult');
+  if (data.added > 0) {
+    el.innerHTML = `<div class="flash flash-success"><i class="fas fa-check"></i> ${data.added} books imported successfully!</div>`;
+    setTimeout(() => location.reload(), 1500);
+  }
+  if (data.errors?.length) {
+    el.innerHTML += data.errors.map(e => `<div class="flash flash-error"><i class="fas fa-xmark"></i> ${e}</div>`).join('');
+  }
+}
+</script>
+{% endblock %}

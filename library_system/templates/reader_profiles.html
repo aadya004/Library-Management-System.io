@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block title %}Reader Profiles – LibraCore{% endblock %}
+{% block page_title %}Reader Profiles{% endblock %}
+{% block content %}
+
+<section class="section">
+  <div class="card">
+    <div class="card-header">
+      <div>
+        <div class="section-tag">Insights</div>
+        <span class="card-title">Reader Profiles</span>
+      </div>
+      <form method="get" action="/reader_profiles">
+        <input type="search" name="q" placeholder="Search by name, email or type" style="padding:8px 12px;border-radius:8px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:var(--text-primary)">
+      </form>
+    </div>
+    <div class="card-body">
+      <div class="profile-grid">
+        {% for u in users %}
+        <a class="profile-card" href="/reader_profiles/{{ u.id }}">
+          <div class="profile-header">
+            <div class="avatar"><i class="bi bi-person-circle"></i></div>
+            <div>
+              <strong>{{ u.name }}</strong>
+              <div class="muted">{{ u.member_type }} • {{ u.email }}</div>
+            </div>
+          </div>
+          <div class="profile-stats">
+            <div><small>Total Borrowed</small><div>{{ u.total_borrowed }}</div></div>
+            <div><small>Active</small><div>{{ u.active_borrows }}</div></div>
+            <div><small>Favorite</small><div>{{ u.favorite_category }}</div></div>
+            <div><small>Recs</small><div>{{ u.recommendations_count }}</div></div>
+          </div>
+        </a>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</section>
+
+{% endblock %}

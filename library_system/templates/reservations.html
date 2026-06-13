@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+{% block title %}Reservations – LibraCore{% endblock %}
+{% block page_title %}Reservation Queues{% endblock %}
+{% block content %}
+
+<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:22px;flex-wrap:wrap;gap:14px;">
+  <div>
+    <h2 style="font-family:'Cinzel',serif;font-size:22px;font-weight:700">Reservation Queues</h2>
+    <p style="color:var(--text-secondary);font-size:13px;margin-top:2px">Overview of books currently held for waiting readers.</p>
+  </div>
+  <a href="/reservations" class="btn btn-ghost btn-sm"><i class="fas fa-sync-alt"></i> Refresh</a>
+</div>
+
+{% if reservations %}
+  {% set total_waiting = 0 %}
+  {% set longest_queue = 0 %}
+  {% for res in reservations %}
+    {% set queue_len = res.queue|length %}
+    {% set total_waiting = total_waiting + queue_len %}
+    {% if queue_len > longest_queue %}
+      {% set longest_queue = queue_len %}
+    {% endif %}
+  {% endfor %}
+
+  <div class="dashboard-layout" style="margin-bottom:24px;">
+    <aside class="card" style="padding:24px;">
+      <div class="panel-heading" style="padding:0 0 16px 0; border-bottom:none;">
+        <span class="panel-title">Reservation Summary</span>
+      </div>
+      <div style="display:grid;gap:14px;margin-top:14px;">
+        <div class="overview-item" style="padding:18px 20px;">
+          <span>Total reserved books</span>
+          <strong>{{ reservations|length }}</strong>
+        </div>
+        <div class="overview-item" style="padding:18px 20px;">
+          <span>Total waiting readers</span>
+          <strong>{{ total_waiting }}</strong>
+        </div>
+        <div class="overview-item" style="padding:18px 20px;">
+          <span>Longest queue</span>
+          <strong>{{ longest_queue }}</strong>
+        </div>
+        <div class="overview-item" style="padding:18px 20px;">
+          <span>Active reservation groups</span>
+          <strong>{{ reservations|length }}</strong>
+        </div>
+      </div>
+    </aside>
+
+    <section class="card" style="padding:24px;">
+      <div class="panel-heading" style="padding:0 0 16px 0; border-bottom:none;">
+        <span class="panel-title">Current Queues</span>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:20px;">
+        {% for res in reservations %}
+        <div class="card" style="padding:18px; background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.05);">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
+            <div>
+              <div class="card-title" style="margin-bottom:4px;">{{ res.book_title }}</div>
+              <div style="font-size:12px;color:var(--text-secondary);">Book ID: {{ res.book_id }}</div>
+            </div>
+            <span class="badge badge-warning">{{ res.queue|length }} waiting</span>
+          </div>
+          <div style="display:grid;gap:12px;">
+            {% for item in res.queue %}
+            <div class="queue-item">
+              <div class="queue-pos">{{ item.pos }}</div>
+              <div style="flex:1;">
+                <div style="font-size:13px;font-weight:500;color:var(--text-primary);">{{ item.user_name }}</div>
+                <div style="font-size:11px;color:var(--text-secondary);">ID: {{ item.user_id }}</div>
+              </div>
+              {% if item.pos == 1 %}
+              <span class="badge badge-success">Next</span>
+              {% endif %}
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </section>
+  </div>
+{% else %}
+  <div class="card" style="padding:48px 24px;">
+    <div class="empty-state" style="padding:0;">
+      <i class="fas fa-book-reader" style="font-size:48px;color:rgba(255,255,255,0.16);"></i>
+      <p style="margin-top:16px;font-size:18px;font-weight:600;color:var(--text-primary);">No active reservation queues.</p>
+      <p style="font-size:13px;color:var(--text-secondary);margin-top:8px;max-width:420px;">The reservation board is clear. Once a book is requested by more than one reader, waiting queues will appear here.</p>
+    </div>
+  </div>
+{% endif %}
+
+{% endblock %}

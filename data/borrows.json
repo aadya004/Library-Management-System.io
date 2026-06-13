@@ -1,0 +1,110 @@
+[
+  {
+    "id": "br001",
+    "book_id": "b001",
+    "user_id": "u001",
+    "borrow_date": "2026-06-03T11:26:00.080460",
+    "due_date": "2026-06-17T11:26:00.080460",
+    "returned": false,
+    "return_date": null
+  },
+  {
+    "id": "br002",
+    "book_id": "b003",
+    "user_id": "u001",
+    "borrow_date": "2026-05-24T11:26:00.080460",
+    "due_date": "2026-06-07T11:26:00.080460",
+    "returned": true,
+    "return_date": "2026-06-06T11:26:00.080460"
+  },
+  {
+    "id": "br003",
+    "book_id": "b002",
+    "user_id": "u002",
+    "borrow_date": "2026-06-08T11:26:00.080460",
+    "due_date": "2026-06-22T11:26:00.080460",
+    "returned": true,
+    "return_date": "2026-06-13T13:14:46.400229"
+  },
+  {
+    "id": "br004",
+    "book_id": "b006",
+    "user_id": "u003",
+    "borrow_date": "2026-05-29T11:26:00.080460",
+    "due_date": "2026-06-12T11:26:00.080460",
+    "returned": false,
+    "return_date": null
+  },
+  {
+    "id": "br005",
+    "book_id": "b007",
+    "user_id": "u002",
+    "borrow_date": "2026-06-05T11:26:00.080460",
+    "due_date": "2026-06-19T11:26:00.080460",
+    "returned": false,
+    "return_date": null
+  },
+  {
+    "id": "br006",
+    "book_id": "b004",
+    "user_id": "u004",
+    "borrow_date": "2026-06-01T11:26:00.080460",
+    "due_date": "2026-06-15T11:26:00.080460",
+    "returned": false,
+    "return_date": null
+  },
+  {
+    "id": "br007",
+    "book_id": "b009",
+    "user_id": "u005",
+    "borrow_date": "2026-06-10T11:26:00.080460",
+    "due_date": "2026-06-24T11:26:00.080460",
+    "returned": false,
+    "return_date": null
+  },
+  {
+    "id": "br008",
+    "book_id": "b012",
+    "user_id": "u003",
+    "borrow_date": "2026-05-19T11:26:00.080460",
+    "due_date": "2026-06-02T11:26:00.080460",
+    "returned": true,
+    "return_date": "2026-06-01T11:26:00.080460"
+  },
+  {
+    "id": "br009",
+    "book_id": "b005",
+    "user_id": "u001",
+    "borrow_date": "2026-05-26T11:26:00.080460",
+    "due_date": "2026-06-09T11:26:00.080460",
+    "returned": true,
+    "return_date": "2026-06-08T11:26:00.080460"
+  },
+  {
+    "id": "br010",
+    "book_id": "b011",
+    "user_id": "u002",
+    "borrow_date": "2026-06-11T11:26:00.080460",
+    "due_date": "2026-06-25T11:26:00.080460",
+    "returned": false,
+    "return_date": null
+  },
+  {
+    "id": "f15ab69d",
+    "book_id": "b006",
+    "user_id": "d73474b5",
+    "borrow_date": "2026-06-13T11:58:18.481371",
+    "due_date": "2026-06-20T11:58:18.481375",
+    "returned": false,
+    "return_date": null
+  },
+  {
+    "id": "52ad5b8c",
+    "book_id": "b005",
+    "user_id": "d73474b5",
+    "borrow_date": "2026-06-13T13:14:39.071187",
+    "due_date": "2026-07-13T13:14:39.071203",
+    "returned": false,
+    "return_date": null
+  }
+]

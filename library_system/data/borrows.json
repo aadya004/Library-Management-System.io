@@ -1,0 +1,92 @@
+[
+  {
+    "id": "br001",
+    "book_id": "b001",
+    "user_id": "u001",
+    "borrow_date": "2026-06-03T05:36:48.273360",
+    "due_date": "2026-06-17T05:36:48.273360",
+    "returned": false,
+    "return_date": null
+  },
+  {
+    "id": "br002",
+    "book_id": "b003",
+    "user_id": "u001",
+    "borrow_date": "2026-05-24T05:36:48.273360",
+    "due_date": "2026-06-07T05:36:48.273360",
+    "returned": true,
+    "return_date": "2026-06-06T05:36:48.273360"
+  },
+  {
+    "id": "br003",
+    "book_id": "b002",
+    "user_id": "u002",
+    "borrow_date": "2026-06-08T05:36:48.273360",
+    "due_date": "2026-06-22T05:36:48.273360",
+    "returned": false,
+    "return_date": null
+  },
+  {
+    "id": "br004",
+    "book_id": "b006",
+    "user_id": "u003",
+    "borrow_date": "2026-05-29T05:36:48.273360",
+    "due_date": "2026-06-12T05:36:48.273360",
+    "returned": false,
+    "return_date": null
+  },
+  {
+    "id": "br005",
+    "book_id": "b007",
+    "user_id": "u002",
+    "borrow_date": "2026-06-05T05:36:48.273360",
+    "due_date": "2026-06-19T05:36:48.273360",
+    "returned": false,
+    "return_date": null
+  },
+  {
+    "id": "br006",
+    "book_id": "b004",
+    "user_id": "u004",
+    "borrow_date": "2026-06-01T05:36:48.273360",
+    "due_date": "2026-06-15T05:36:48.273360",
+    "returned": false,
+    "return_date": null
+  },
+  {
+    "id": "br007",
+    "book_id": "b009",
+    "user_id": "u005",
+    "borrow_date": "2026-06-10T05:36:48.273360",
+    "due_date": "2026-06-24T05:36:48.273360",
+    "returned": false,
+    "return_date": null
+  },
+  {
+    "id": "br008",
+    "book_id": "b012",
+    "user_id": "u003",
+    "borrow_date": "2026-05-19T05:36:48.273360",
+    "due_date": "2026-06-02T05:36:48.273360",
+    "returned": true,
+    "return_date": "2026-06-01T05:36:48.273360"
+  },
+  {
+    "id": "br009",
+    "book_id": "b005",
+    "user_id": "u001",
+    "borrow_date": "2026-05-26T05:36:48.273360",
+    "due_date": "2026-06-09T05:36:48.273360",
+    "returned": true,
+    "return_date": "2026-06-08T05:36:48.273360"
+  },
+  {
+    "id": "br010",
+    "book_id": "b011",
+    "user_id": "u002",
+    "borrow_date": "2026-06-11T05:36:48.273360",
+    "due_date": "2026-06-25T05:36:48.273360",
+    "returned": false,
+    "return_date": null
+  }
+]

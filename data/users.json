@@ -1,0 +1,58 @@
+[
+  {
+    "id": "u001",
+    "name": "Alice Chen",
+    "email": "alice@uni.edu",
+    "phone": "9856453254",
+    "member_type": "Student",
+    "joined_date": "2026-06-13T11:26:00.080158"
+  },
+  {
+    "id": "u002",
+    "name": "Bob Patel",
+    "email": "bob@uni.edu",
+    "phone": "8567426593",
+    "member_type": "Student",
+    "joined_date": "2026-06-13T11:26:00.080161"
+  },
+  {
+    "id": "u003",
+    "name": "Carol Smith",
+    "email": "carol@uni.edu",
+    "phone": "9568423674",
+    "member_type": "Faculty",
+    "joined_date": "2026-06-13T11:26:00.080162"
+  },
+  {
+    "id": "u004",
+    "name": "David Kim",
+    "email": "david@uni.edu",
+    "phone": "78562584569",
+    "member_type": "Student",
+    "joined_date": "2026-06-13T11:26:00.080163"
+  },
+  {
+    "id": "u005",
+    "name": "Eva Martinez",
+    "email": "eva@uni.edu",
+    "phone": "8459726358",
+    "member_type": "Student",
+    "joined_date": "2026-06-13T11:26:00.080164"
+  },
+  {
+    "id": "d73474b5",
+    "name": "Ben Stars",
+    "email": "benzstars@gmail.com",
+    "phone": "9856485236",
+    "member_type": "External",
+    "joined_date": "2026-06-13T11:58:02.105807"
+  },
+  {
+    "id": "8e472949",
+    "name": "Alexander",
+    "email": "alex@yahoo.com",
+    "phone": "8567425963",
+    "member_type": "Staff",
+    "joined_date": "2026-06-13T13:16:09.835460"
+  }
+]

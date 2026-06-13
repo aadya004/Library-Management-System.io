@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% block title %}{{ 'Edit' if book else 'Add' }} Book – LibraCore{% endblock %}
+{% block page_title %}{{ 'Edit' if book else 'Add' }} Book{% endblock %}
+{% block content %}
+<div style="max-width:640px">
+  <div style="display:flex;align-items:center;gap:12px;margin-bottom:24px">
+    <a href="/books" class="btn btn-ghost btn-sm"><i class="fas fa-arrow-left"></i> Back</a>
+    <h2 style="font-family:'Cinzel',serif;font-size:20px;font-weight:700">{{ 'Edit Book' if book else 'Add New Book' }}</h2>
+  </div>
+  <div class="card">
+    <div class="card-body">
+      <form method="post">
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Title *</label>
+            <input class="form-control" name="title" required value="{{ book.title if book else '' }}" placeholder="Book title">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Author *</label>
+            <input class="form-control" name="author" required value="{{ book.author if book else '' }}" placeholder="Author name">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Category *</label>
+            <select class="form-control" name="category" required>
+              {% set cats = ['Fiction','Computer Science','Science','History','Philosophy','Psychology','Mathematics','Biography','Self-Help','Technology','Art','Other'] %}
+              {% for cat in cats %}
+              <option value="{{ cat }}" {% if book and book.category == cat %}selected{% endif %}>{{ cat }}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Copies</label>
+            <input class="form-control" name="copies" type="number" min="1" value="{{ book.copies if book else 1 }}">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">ISBN</label>
+            <input class="form-control" name="isbn" value="{{ book.isbn if book else '' }}" placeholder="978-XXXXXXXXXX">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Year Published</label>
+            <input class="form-control" name="year" value="{{ book.year if book else '' }}" placeholder="2024">
+          </div>
+        </div>
+        <div style="display:flex;gap:10px;margin-top:8px">
+          <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> {{ 'Save Changes' if book else 'Add Book' }}</button>
+          <a href="/books" class="btn btn-ghost">Cancel</a>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

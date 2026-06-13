@@ -1,0 +1,262 @@
+{% extends "base.html" %}
+{% block title %}Dashboard – LibraCore{% endblock %}
+{% block page_title %}Dashboard{% endblock %}
+{% block content %}
+
+<div class="dashboard-hero">
+  <section class="hero-card">
+    <div class="hero-label">Librarian Overview</div>
+    <h1>Welcome back, steward of the stacks</h1>
+    <p>Today’s circulation snapshot and a calm view of what needs your attention in the reading room.</p>
+
+    <div class="hero-meta">
+      <div class="hero-metric">
+        <span>Active borrows</span>
+        <strong>{{ stats.active_borrows }}</strong>
+      </div>
+      <div class="hero-metric">
+        <span>Due / Overdue</span>
+        <strong>{{ stats.overdue }}</strong>
+      </div>
+      <div class="hero-metric">
+        <span>Available copies</span>
+        <strong>{{ stats.available_copies }}</strong>
+      </div>
+    </div>
+
+    <div class="priority-row">
+      <div class="priority-card">
+        <div class="priority-title">📚 Books Due Today</div>
+        <div class="priority-value">{{ priorities.due_today }}</div>
+      </div>
+      <div class="priority-card">
+        <div class="priority-title">⏳ Overdue Items</div>
+        <div class="priority-value">{{ priorities.overdue }}</div>
+      </div>
+      <div class="priority-card">
+        <div class="priority-title">🔥 High-Demand Books</div>
+        <div class="priority-value">{{ priorities.high_demand }}</div>
+      </div>
+      <div class="priority-card">
+        <div class="priority-title">🚨 Low-Stock Titles</div>
+        <div class="priority-value">{{ priorities.low_stock }}</div>
+      </div>
+    </div>
+
+    <div class="hero-note">A quick glance at today’s demand helps you prioritize returns, reserves, and the next shelving round.</div>
+  </section>
+
+  <aside class="hero-aside">
+    <div class="overview-panel card">
+      <div class="panel-heading">
+        <span class="panel-title">Library Health</span>
+        <span class="badge badge-info">Core view</span>
+      </div>
+      <div class="overview-list">
+        <div class="overview-item">
+          <span>Total titles</span>
+          <strong>{{ stats.total_books }}</strong>
+        </div>
+        <div class="overview-item">
+          <span>Registered members</span>
+          <strong>{{ stats.total_users }}</strong>
+        </div>
+        <div class="overview-item">
+          <span>Total copies</span>
+          <strong>{{ stats.total_copies }}</strong>
+        </div>
+        <div class="overview-item">
+          <span>Shelving capacity</span>
+          <strong>{{ stats.available_copies }}</strong>
+        </div>
+      </div>
+    </div>
+
+    <div class="queue-widget card">
+      <div class="panel-heading">
+        <span class="panel-title">Queue Status</span>
+        <span class="badge badge-warning">Reservation flow</span>
+      </div>
+      {% set queue_status = queue_status|default({'books_waiting': 0, 'people_waiting': 0}) %}
+      <div class="queue-stats">
+        <div class="queue-stat">
+          <span>Books with waiting readers</span>
+          <strong>{{ queue_status.books_with_waiting_readers }}</strong>
+        </div>
+        <div class="queue-stat">
+          <span>People in queue</span>
+          <strong>{{ queue_status.people_in_queue }}</strong>
+        </div>
+      </div>
+      <p class="queue-note">Reservation details are maintained on the Reservations page, but this helps you keep waiting titles top of mind.</p>
+    </div>
+  </aside>
+</div>
+
+<div class="dashboard-layout">
+  <section class="card activity-card">
+    <div class="card-header">
+      <div>
+        <div class="section-tag">Activity</div>
+        <span class="card-title">Recent circulation events</span>
+      </div>
+      <span class="badge badge-info">{{ recent_borrows|length }} events</span>
+    </div>
+    <div class="card-body timeline">
+      {% for br in recent_borrows %}
+      <article class="timeline-item">
+        <div class="timeline-icon {% if br.returned %}status-returned{% elif br.overdue %}status-overdue{% else %}status-active{% endif %}">
+          {% if br.returned %}<i class="fas fa-rotate-left"></i>{% elif br.overdue %}<i class="fas fa-clock"></i>{% else %}<i class="fas fa-book-open"></i>{% endif %}
+        </div>
+        <div class="timeline-copy">
+          <strong>{{ br.user_name }}</strong>
+          <p>{{ br.book_title }}</p>
+          <small>{{ br.borrow_date[:10] }} · {% if br.returned %}Returned{% elif br.overdue %}Overdue{% else %}Borrowed{% endif %}</small>
+        </div>
+        <span class="timeline-chip {% if br.returned %}status-returned{% elif br.overdue %}status-overdue{% else %}status-active{% endif %}">
+          {% if br.returned %}Return{% elif br.overdue %}Overdue{% else %}Borrow{% endif %}
+        </span>
+      </article>
+      {% else %}
+      <div class="empty-state" style="padding:32px 0;">
+        <i class="fas fa-hourglass-half"></i>
+        <p>No circulation events available yet.</p>
+      </div>
+      {% endfor %}
+    </div>
+  </section>
+
+  <aside class="card library-insights">
+    <div class="panel-heading">
+      <span class="panel-title">Library Insights</span>
+      <span class="badge badge-info">Focus</span>
+    </div>
+    <div class="insight-grid">
+      <div class="insight-card">
+        <span>Collections size</span>
+        <strong>{{ stats.total_books }}</strong>
+        <p>All active titles currently tracked.</p>
+      </div>
+      <div class="insight-card">
+        <span>Circulating now</span>
+        <strong>{{ stats.active_borrows }}</strong>
+        <p>Books currently in readers' hands.</p>
+      </div>
+      <div class="insight-card">
+        <span>Pending attention</span>
+        <strong>{{ stats.overdue }}</strong>
+        <p>Overdue items that need recall.</p>
+      </div>
+    </div>
+
+    <div class="trending-card">
+      <div class="panel-heading" style="margin-bottom: 18px;">
+        <span class="panel-title">Trending Books</span>
+        <span class="badge badge-warning">Demand score</span>
+      </div>
+      <div class="trending-list">
+        {% set seen = [] %}
+        {% for br in recent_borrows %}
+          {% if br.book_title not in seen %}
+            {% set _ = seen.append(br.book_title) %}
+            <div class="trending-item">
+              <div>
+                <strong>{{ br.book_title }}</strong>
+                <small>{{ br.user_name }} · {{ br.borrow_date[:10] }}</small>
+              </div>
+              <span class="trend-score">{{ 100 - (loop.index0 * 16) }}</span>
+            </div>
+          {% endif %}
+        {% endfor %}
+        {% if seen|length == 0 %}
+          <div class="empty-state" style="padding:24px 0;">
+            <i class="fas fa-book-open"></i>
+            <p>No recent titles yet.</p>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </aside>
+</div>
+
+<section class="section">
+  <div class="card">
+    <div class="card-header">
+      <div>
+        <div class="section-tag">Queue Management</div>
+        <span class="card-title">Latest borrow records</span>
+      </div>
+      <a href="/borrow" class="btn btn-ghost btn-sm">Open Borrowing</a>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>User</th><th>Book</th><th>Borrowed</th><th>Due</th><th>Status</th></tr>
+        </thead>
+        <tbody>
+          {% for br in recent_borrows %}
+          <tr>
+            <td><strong>{{ br.user_name }}</strong></td>
+            <td style="max-width:240px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ br.book_title }}</td>
+            <td style="color:var(--text-secondary)">{{ br.borrow_date[:10] }}</td>
+            <td style="color:var(--text-secondary)">{{ br.due_date[:10] }}</td>
+            <td>
+              {% if br.returned %}
+                <span class="badge badge-success"><i class="fas fa-check"></i> Returned</span>
+              {% elif br.overdue %}
+                <span class="badge badge-danger"><i class="fas fa-clock"></i> Overdue</span>
+              {% else %}
+                <span class="badge badge-info"><i class="fas fa-arrow-right"></i> Active</span>
+              {% endif %}
+            </td>
+          </tr>
+          {% else %}
+          <tr><td colspan="5"><div class="empty-state"><i class="fas fa-books"></i><p>No borrow records yet.</p></div></td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- Recent Notifications Widget -->
+<!-- Removed notifications, most demanded and overdue summary from dashboard (moved to dedicated pages). -->
+
+<!-- Quick Insights -->
+<section class="section">
+  <div class="card">
+    <div class="card-header">
+      <span class="card-title">Quick Insights</span>
+      <span class="badge badge-info">Analytics</span>
+    </div>
+    <div class="card-body">
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:18px;">
+        <div style="padding:20px;background:rgba(255,255,255,0.03);border-radius:14px;border:1px solid rgba(255,255,255,0.06);">
+          <div style="font-size:12px;color:var(--text-secondary);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:10px;">Most Borrowed</div>
+          {% if most_borrowed %}
+          <div style="font-size:15px;font-weight:600;color:var(--text-primary);margin-bottom:4px;">{{ most_borrowed.title }}</div>
+          <small style="color:var(--text-secondary);">{{ most_borrowed.author }}</small>
+          {% else %}
+          <small style="color:var(--text-secondary);">No data</small>
+          {% endif %}
+        </div>
+        <div style="padding:20px;background:rgba(255,255,255,0.03);border-radius:14px;border:1px solid rgba(255,255,255,0.06);">
+          <div style="font-size:12px;color:var(--text-secondary);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:10px;">Most Active Member</div>
+          {% if most_active_user %}
+          <div style="font-size:15px;font-weight:600;color:var(--text-primary);margin-bottom:4px;">{{ most_active_user.name }}</div>
+          <small style="color:var(--text-secondary);">{{ most_active_user.member_type }}</small>
+          {% else %}
+          <small style="color:var(--text-secondary);">No data</small>
+          {% endif %}
+        </div>
+        <div style="padding:20px;background:rgba(255,255,255,0.03);border-radius:14px;border:1px solid rgba(255,255,255,0.06);">
+          <div style="font-size:12px;color:var(--text-secondary);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:10px;">Top Category</div>
+          <div style="font-size:15px;font-weight:600;color:var(--text-primary);margin-bottom:4px;">{{ most_popular_category }}</div>
+          <small style="color:var(--text-secondary);">Most borrowed</small>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% endblock %}

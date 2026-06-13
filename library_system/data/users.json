@@ -1,0 +1,42 @@
+[
+  {
+    "id": "u001",
+    "name": "Alice Chen",
+    "email": "alice@uni.edu",
+    "phone": "+91 98765 43210",
+    "member_type": "Student",
+    "joined_date": "2026-06-13T05:36:48.273214"
+  },
+  {
+    "id": "u002",
+    "name": "Bob Patel",
+    "email": "bob@uni.edu",
+    "phone": "+91 98765 43211",
+    "member_type": "Student",
+    "joined_date": "2026-06-13T05:36:48.273220"
+  },
+  {
+    "id": "u003",
+    "name": "Carol Smith",
+    "email": "carol@uni.edu",
+    "phone": "+91 98765 43212",
+    "member_type": "Faculty",
+    "joined_date": "2026-06-13T05:36:48.273221"
+  },
+  {
+    "id": "u004",
+    "name": "David Kim",
+    "email": "david@uni.edu",
+    "phone": "+91 98765 43213",
+    "member_type": "Student",
+    "joined_date": "2026-06-13T05:36:48.273223"
+  },
+  {
+    "id": "u005",
+    "name": "Eva Martinez",
+    "email": "eva@uni.edu",
+    "phone": "+91 98765 43214",
+    "member_type": "Student",
+    "joined_date": "2026-06-13T05:36:48.273224"
+  }
+]

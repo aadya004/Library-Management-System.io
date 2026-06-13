@@ -1,0 +1,134 @@
+[
+  {
+    "id": "b001",
+    "title": "The Great Gatsby",
+    "author": "F. Scott Fitzgerald",
+    "category": "Fiction",
+    "isbn": "978-0743273565",
+    "year": "1925",
+    "copies": 5,
+    "copies_available": 3,
+    "added_date": "2026-06-13T11:26:00.079657"
+  },
+  {
+    "id": "b002",
+    "title": "To Kill a Mockingbird",
+    "author": "Harper Lee",
+    "category": "Fiction",
+    "isbn": "978-0061935466",
+    "year": "1960",
+    "copies": 4,
+    "copies_available": 2,
+    "added_date": "2026-06-13T11:26:00.079672"
+  },
+  {
+    "id": "b003",
+    "title": "Introduction to Algorithms",
+    "author": "Thomas H. Cormen",
+    "category": "Computer Science",
+    "isbn": "978-0262033848",
+    "year": "2009",
+    "copies": 6,
+    "copies_available": 4,
+    "added_date": "2026-06-13T11:26:00.079673"
+  },
+  {
+    "id": "b004",
+    "title": "Clean Code",
+    "author": "Robert C. Martin",
+    "category": "Computer Science",
+    "isbn": "978-0132350884",
+    "year": "2008",
+    "copies": 3,
+    "copies_available": 1,
+    "added_date": "2026-06-13T11:26:00.079674"
+  },
+  {
+    "id": "b005",
+    "title": "1984",
+    "author": "George Orwell",
+    "category": "Fiction",
+    "isbn": "978-0451524935",
+    "year": "1949",
+    "copies": 5,
+    "copies_available": 5,
+    "added_date": "2026-06-13T11:26:00.079675"
+  },
+  {
+    "id": "b006",
+    "title": "Sapiens",
+    "author": "Yuval Noah Harari",
+    "category": "History",
+    "isbn": "978-0062316097",
+    "year": "2011",
+    "copies": 4,
+    "copies_available": 3,
+    "added_date": "2026-06-13T11:26:00.079675"
+  },
+  {
+    "id": "b007",
+    "title": "The Pragmatic Programmer",
+    "author": "David Thomas",
+    "category": "Computer Science",
+    "isbn": "978-0135957059",
+    "year": "2019",
+    "copies": 3,
+    "copies_available": 2,
+    "added_date": "2026-06-13T11:26:00.079676"
+  },
+  {
+    "id": "b008",
+    "title": "Brave New World",
+    "author": "Aldous Huxley",
+    "category": "Fiction",
+    "isbn": "978-0060850524",
+    "year": "1932",
+    "copies": 4,
+    "copies_available": 4,
+    "added_date": "2026-06-13T11:26:00.079676"
+  },
+  {
+    "id": "b009",
+    "title": "A Brief History of Time",
+    "author": "Stephen Hawking",
+    "category": "Science",
+    "isbn": "978-0553380163",
+    "year": "1988",
+    "copies": 3,
+    "copies_available": 2,
+    "added_date": "2026-06-13T11:26:00.079677"
+  },
+  {
+    "id": "b010",
+    "title": "The Art of War",
+    "author": "Sun Tzu",
+    "category": "Philosophy",
+    "isbn": "978-1599869773",
+    "year": "500BC",
+    "copies": 5,
+    "copies_available": 5,
+    "added_date": "2026-06-13T11:26:00.079677"
+  },
+  {
+    "id": "b011",
+    "title": "Design Patterns",
+    "author": "Gang of Four",
+    "category": "Computer Science",
+    "isbn": "978-0201633610",
+    "year": "1994",
+    "copies": 2,
+    "copies_available": 0,
+    "added_date": "2026-06-13T11:26:00.079678"
+  },
+  {
+    "id": "b012",
+    "title": "Thinking, Fast and Slow",
+    "author": "Daniel Kahneman",
+    "category": "Psychology",
+    "isbn": "978-0374533557",
+    "year": "2011",
+    "copies": 4,
+    "copies_available": 3,
+    "added_date": "2026-06-13T11:26:00.079678"
+  }
+]

@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+{% block title %}Overdue Summary – LibraCore{% endblock %}
+{% block page_title %}Overdue Summary{% endblock %}
+{% block content %}
+
+<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:22px;flex-wrap:wrap;gap:14px;">
+  <div>
+    <h2 style="font-family:'Cinzel',serif;font-size:22px;font-weight:700">Overdue Management</h2>
+    <p style="color:var(--text-secondary);font-size:13px;margin-top:2px">Track overdue books, fines, and member status.</p>
+  </div>
+  {% if overdue_summary.overdue_count > 0 %}<span class="badge badge-danger">{{ overdue_summary.overdue_count }} items</span>{% else %}<span class="badge badge-success">Clear</span>{% endif %}
+</div>
+
+<!-- Summary Cards -->
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:18px;margin-bottom:26px;">
+  <div class="card" style="padding:26px;border-left:4px solid #8B2E2E;">
+    <div style="font-size:12px;color:var(--text-secondary);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:8px;">Total Overdue Books</div>
+    <div style="font-family:'Cinzel',serif;font-size:36px;font-weight:700;color:#8B2E2E;">{{ overdue_summary.overdue_count }}</div>
+    <p style="margin:8px 0 0;font-size:12px;color:var(--text-muted);">Items requiring attention</p>
+  </div>
+
+  <div class="card" style="padding:26px;border-left:4px solid #C9A227;">
+    <div style="font-size:12px;color:var(--text-secondary);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:8px;">Total Pending Fines</div>
+    <div style="font-family:'Cinzel',serif;font-size:36px;font-weight:700;color:var(--accent);">₹{{ overdue_summary.total_fine }}</div>
+    <p style="margin:8px 0 0;font-size:12px;color:var(--text-muted);">Fine amount (@₹20/day)</p>
+  </div>
+
+  <div class="card" style="padding:26px;border-left:4px solid #8B6B3F;">
+    <div style="font-size:12px;color:var(--text-secondary);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:8px;">Avg Overdue Duration</div>
+    <div style="font-family:'Cinzel',serif;font-size:36px;font-weight:700;color:var(--accent2);">{{ avg_overdue }}</div>
+    <p style="margin:8px 0 0;font-size:12px;color:var(--text-muted);">Days late (average)</p>
+  </div>
+</div>
+
+<!-- Most Overdue Insights -->
+{% if most_overdue_member or most_overdue_book %}
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:18px;margin-bottom:26px;">
+  {% if most_overdue_member %}
+  <div class="card" style="padding:20px;background:rgba(139,46,46,0.08);border:1px solid rgba(139,46,46,0.15);border-radius:14px;">
+    <div style="font-size:12px;color:var(--text-secondary);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:8px;">Most Overdue Member</div>
+    <div style="font-size:18px;font-weight:600;color:var(--text-primary);">{{ most_overdue_member }}</div>
+    <p style="margin:8px 0 0;font-size:12px;color:var(--text-muted);">Highest count of overdue items</p>
+  </div>
+  {% endif %}
+
+  {% if most_overdue_book %}
+  <div class="card" style="padding:20px;background:rgba(139,46,46,0.08);border:1px solid rgba(139,46,46,0.15);border-radius:14px;">
+    <div style="font-size:12px;color:var(--text-secondary);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:8px;">Most Overdue Book</div>
+    <div style="font-size:18px;font-weight:600;color:var(--text-primary);">{{ most_overdue_book }}</div>
+    <p style="margin:8px 0 0;font-size:12px;color:var(--text-muted);">Most frequently late</p>
+  </div>
+  {% endif %}
+</div>
+{% endif %}
+
+<!-- Detailed Overdue Records Table -->
+{% if overdue_records %}
+<div class="card">
+  <div class="card-header">
+    <span class="card-title">Detailed Overdue Records</span>
+    <span class="badge badge-danger">{{ overdue_records|length }}</span>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Member</th>
+          <th>Book</th>
+          <th>Days Late</th>
+          <th>Fine (₹)</th>
+          <th>Due Date</th>
+          <th>Borrowed</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for record in overdue_records %}
+        <tr style="{% if record.fine > 100 %}background:rgba(139,46,46,0.08){% endif %}">
+          <td><strong>{{ record.member }}</strong></td>
+          <td style="max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ record.book }}</td>
+          <td style="font-weight:600;{% if record.days_late > 7 %}color:#8B2E2E{% endif %}">{{ record.days_late }}</td>
+          <td style="font-weight:700;color:var(--accent);">{{ record.fine }}</td>
+          <td style="color:var(--text-secondary);font-size:12px;">{{ record.due_date[:10] }}</td>
+          <td style="color:var(--text-secondary);font-size:12px;">{{ record.borrow_date[:10] }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% else %}
+<div class="card" style="padding:48px 24px;">
+  <div class="empty-state" style="padding:0;">
+    <i class="fas fa-check-circle" style="font-size:48px;color:#5B7C4D;"></i>
+    <p style="margin-top:16px;font-size:18px;font-weight:600;color:#5B7C4D;">All clear!</p>
+    <p style="font-size:13px;color:var(--text-secondary);margin-top:8px;max-width:420px;">No overdue books currently. All members are keeping their items on track.</p>
+  </div>
+</div>
+{% endif %}
+
+{% endblock %}

@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+{% block title %}{{ user.name }} – Reader Profile{% endblock %}
+{% block page_title %}{{ user.name }}{% endblock %}
+{% block content %}
+
+<section class="section">
+  <div class="card">
+    <div class="card-header">
+      <div>
+        <div class="section-tag">Profile</div>
+        <span class="card-title">{{ user.name }}</span>
+      </div>
+      <div>
+        <span class="badge">{{ user.member_type }}</span>
+      </div>
+    </div>
+    <div class="card-body profile-detail">
+      <div class="profile-main">
+        <div class="profile-left">
+          <div class="profile-card-large">
+            <div class="avatar-large"><i class="bi bi-person-circle"></i></div>
+            <h3>{{ user.name }}</h3>
+            <p class="muted">{{ user.email }}</p>
+            <div class="badges">
+              {% if stats.total_borrowed > 20 %}<span class="pill">🔥 Top Reader</span>{% endif %}
+              {% if stats.overdue == 0 and stats.total_borrowed > 5 %}<span class="pill">🏆 Responsible Reader</span>{% endif %}
+              {% if stats.active_borrows > 5 %}<span class="pill">⏳ Frequent Borrower</span>{% endif %}
+            </div>
+          </div>
+        </div>
+        <div class="profile-right">
+          <div class="stat-grid">
+            <div class="stat-card"><small>Total Books Borrowed</small><strong>{{ stats.total_borrowed }}</strong></div>
+            <div class="stat-card"><small>Active Borrows</small><strong>{{ stats.active_borrows }}</strong></div>
+            <div class="stat-card"><small>Returned</small><strong>{{ stats.returned }}</strong></div>
+            <div class="stat-card"><small>Overdue</small><strong>{{ stats.overdue }}</strong></div>
+            <div class="stat-card"><small>Total Fines</small><strong>₹{{ stats.total_fines }}</strong></div>
+            <div class="stat-card"><small>Queue Membership</small><strong>{{ stats.queue_membership }}</strong></div>
+          </div>
+        </div>
+      </div>
+
+      <hr style="margin:18px 0;border-top:1px solid rgba(255,255,255,0.04)">
+      <div class="section-sub">
+        <h4>Reading Preferences</h4>
+        <p><strong>Favorite Category:</strong> {{ favorite or 'Unknown' }}</p>
+        <p><strong>Recent Borrowed:</strong></p>
+        <ul>
+          {% for br in stats.recent_borrows %}
+          <li>{{ br.book_title if br.book_title else br.book_id }} • {{ br.borrow_date[:10] }}</li>
+          {% endfor %}
+        </ul>
+      </div>
+
+      <div class="section-sub">
+        <h4>Reservation History</h4>
+        <ul>
+          {% for r in stats.reservation_history %}
+          <li>{{ r.book_title }} • position {{ r.position }}</li>
+          {% else %}
+          <li class="muted">No reservations</li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% endblock %}

@@ -1,0 +1,11 @@
+name,email,phone,member_type
+Sarah Johnson,sarah.j@university.edu,+91 98765 43201,Student
+Michael Chen,m.chen@university.edu,+91 98765 43202,Student
+Dr. Priya Nair,p.nair@university.edu,+91 98765 43203,Faculty
+James Wilson,j.wilson@university.edu,+91 98765 43204,Student
+Ananya Krishnan,a.krishnan@university.edu,+91 98765 43205,Student
+Prof. Robert Kumar,r.kumar@university.edu,+91 98765 43206,Faculty
+Deepa Mehta,d.mehta@university.edu,+91 98765 43207,Staff
+Arjun Sharma,a.sharma@university.edu,+91 98765 43208,Student
+Liu Wei,l.wei@university.edu,+91 98765 43209,Student
+Maria Gonzalez,m.gonzalez@university.edu,+91 98765 43210,External

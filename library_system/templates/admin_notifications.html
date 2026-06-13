@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+{% block title %}Notifications – LibraCore{% endblock %}
+{% block page_title %}Notifications{% endblock %}
+{% block content %}
+
+<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:22px;flex-wrap:wrap;gap:14px;">
+  <div>
+    <h2 style="font-family:'Cinzel',serif;font-size:22px;font-weight:700">Notification Center</h2>
+    <p style="color:var(--text-secondary);font-size:13px;margin-top:2px">System events and library activity log.</p>
+  </div>
+  <span class="badge badge-info">{{ notifications|length }} events</span>
+</div>
+
+{% if notifications %}
+<div class="card">
+  <div class="card-body">
+    <div class="timeline">
+      {% for notif in notifications %}
+      <div style="display:grid;grid-template-columns:auto 1fr;gap:16px;padding:18px 0;border-bottom:1px solid rgba(255,255,255,0.04);">
+        <!-- Timeline dot with color based on type -->
+        <div style="display:flex;flex-direction:column;align-items:center;gap:8px;">
+          <div style="width:12px;height:12px;border-radius:50%;background:{% if notif.type == 'success' %}#5B7C4D{% elif notif.type == 'warning' %}#C9A227{% elif notif.type == 'danger' %}#8B2E2E{% else %}#8B6B3F{% endif %};"></div>
+          <div style="width:2px;height:24px;background:rgba(255,255,255,0.1);"></div>
+        </div>
+
+        <!-- Notification content -->
+        <div style="padding-top:2px;">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap;margin-bottom:6px;">
+            <p style="margin:0;font-size:14px;font-weight:600;color:var(--text-primary);">{{ notif.message }}</p>
+            <span class="badge {% if notif.type == 'success' %}badge-success{% elif notif.type == 'warning' %}badge-warning{% elif notif.type == 'danger' %}badge-danger{% else %}badge-info{% endif %}" style="font-size:10px;text-transform:uppercase;">{{ notif.type }}</span>
+          </div>
+          <div style="font-size:12px;color:var(--text-secondary);">
+            <i class="fas fa-clock"></i> {{ notif.timestamp[:16].replace('T', ' ') }}
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+{% else %}
+<div class="card" style="padding:48px 24px;">
+  <div class="empty-state" style="padding:0;">
+    <i class="fas fa-bell" style="font-size:48px;color:rgba(255,255,255,0.16);"></i>
+    <p style="margin-top:16px;font-size:18px;font-weight:600;color:var(--text-primary);">No notifications.</p>
+    <p style="font-size:13px;color:var(--text-secondary);margin-top:8px;max-width:420px;">System events will appear here as library operations occur.</p>
+  </div>
+</div>
+{% endif %}
+
+<!-- Notification Types Legend -->
+<div class="card" style="margin-top:24px;">
+  <div class="card-header">
+    <span class="card-title">Event Types</span>
+  </div>
+  <div class="card-body">
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px;">
+      <div style="padding:16px;background:rgba(91,124,77,0.1);border-left:3px solid #5B7C4D;border-radius:8px;">
+        <div style="font-size:12px;color:var(--text-secondary);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:4px;">Success</div>
+        <p style="margin:0;font-size:13px;color:var(--text-primary);">Book returned, queue allocation, user registered</p>
+      </div>
+      <div style="padding:16px;background:rgba(201,162,39,0.1);border-left:3px solid #C9A227;border-radius:8px;">
+        <div style="font-size:12px;color:var(--text-secondary);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:4px;">Warning</div>
+        <p style="margin:0;font-size:13px;color:var(--text-primary);">Queue entry (no copies available)</p>
+      </div>
+      <div style="padding:16px;background:rgba(139,107,63,0.1);border-left:3px solid #8B6B3F;border-radius:8px;">
+        <div style="font-size:12px;color:var(--text-secondary);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:4px;">Info</div>
+        <p style="margin:0;font-size:13px;color:var(--text-primary);">Book borrowed, new book added</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

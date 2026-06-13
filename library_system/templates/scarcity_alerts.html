@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+{% block title %}Scarcity Alerts – LibraCore{% endblock %}
+{% block page_title %}Scarcity Alerts{% endblock %}
+{% block content %}
+
+<section class="section">
+  <div class="card">
+    <div class="card-header">
+      <div>
+        <div class="section-tag">Operations</div>
+        <span class="card-title">Scarcity Alerts</span>
+      </div>
+      <div>
+        <span class="badge badge-warning">Priority</span>
+      </div>
+    </div>
+    <div class="card-body">
+      <h4>Out of Stock</h4>
+      <div class="alert-grid">
+        {% for b in alerts.out_of_stock %}
+        <div class="alert-card alert-critical">
+          <div><strong>{{ b.title }}</strong></div>
+          <small>{{ b.author }}</small>
+          <div class="muted">Queue: {{ b.queue_length }} • Demand: {{ b.demand_score }}</div>
+        </div>
+        {% else %}
+        <div class="muted">No out-of-stock books.</div>
+        {% endfor %}
+      </div>
+
+      <h4 style="margin-top:18px">Low Stock</h4>
+      <div class="alert-grid">
+        {% for b in alerts.low_stock %}
+        <div class="alert-card alert-warning">
+          <div><strong>{{ b.title }}</strong></div>
+          <small>Available: {{ b.copies_available }} • Demand: {{ b.demand_score }}</small>
+        </div>
+        {% else %}
+        <div class="muted">No low-stock alerts.</div>
+        {% endfor %}
+      </div>
+
+      <h4 style="margin-top:18px">High Demand (Top 10)</h4>
+      <div class="alert-grid">
+        {% for b in alerts.high_demand %}
+        <div class="alert-card alert-info">
+          <div><strong>{{ b.title }}</strong></div>
+          <small>Demand: {{ b.demand_score }} • Queue: {{ b.queue_length }}</small>
+        </div>
+        {% endfor %}
+      </div>
+
+      <h4 style="margin-top:18px">Most Requested Categories</h4>
+      <ul>
+        {% for cat, cnt in alerts.most_requested_categories %}
+        <li>{{ cat }} — {{ cnt }} borrows</li>
+        {% else %}
+        <li class="muted">No category data.</li>
+        {% endfor %}
+      </ul>
+
+      <h4 style="margin-top:18px">Recommended Restocking</h4>
+      <div class="alert-grid">
+        {% for b in alerts.recommended_restock %}
+        <div class="alert-card alert-reco">
+          <div><strong>{{ b.title }}</strong> <small class="muted">({{ b.category }})</small></div>
+          <small>Demand: {{ b.demand_score }} • Available: {{ b.copies_available }}</small>
+          <div class="reco-note">Recommendation: Purchase additional copies</div>
+        </div>
+        {% else %}
+        <div class="muted">No immediate restock recommendations.</div>
+        {% endfor %}
+      </div>
+
+    </div>
+  </div>
+</section>
+
+{% endblock %}

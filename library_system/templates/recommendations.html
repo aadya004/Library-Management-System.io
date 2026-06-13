@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+{% block title %}Recommendations – LibraCore{% endblock %}
+{% block page_title %}Recommendations{% endblock %}
+{% block content %}
+
+<div style="display:grid;grid-template-columns:320px 1fr;gap:24px;align-items:start;">
+
+  <div class="card">
+    <div class="card-header"><span class="card-title"><i class="fas fa-users" style="color:var(--accent)"></i> Member Selection</span></div>
+    <div class="card-body">
+      <form method="get">
+        <div class="form-group">
+          <label class="form-label">Select Member</label>
+          <select class="form-control" name="user_id" onchange="this.form.submit()">
+            <option value="">— choose member —</option>
+            {% for u in users %}
+            <option value="{{ u.id }}" {% if selected_user == u.id %}selected{% endif %}>{{ u.name }}</option>
+            {% endfor %}
+          </select>
+        </div>
+      </form>
+
+      <div style="margin-top:18px;padding:18px;background:var(--bg-dark);border-radius:12px;">
+        <div style="font-size:14px;font-weight:600;color:var(--text-primary);margin-bottom:8px">How this works</div>
+        <p style="font-size:13px;color:var(--text-secondary);line-height:1.8;">Recommendations are generated from the member's borrow history and category affinities. The system surfaces titles most likely to match their interests.</p>
+      </div>
+    </div>
+  </div>
+
+  <div>
+    {% if selected_user %}
+      <div class="card" style="margin-bottom:18px;padding:22px;">
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;">
+          <div>
+            <div style="font-size:14px;color:var(--text-secondary);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:6px;">Member</div>
+            <div style="font-size:22px;font-weight:700;color:var(--text-primary);">{{ selected_user_name }}</div>
+          </div>
+          <div style="text-align:right;">
+            <div style="font-size:12px;color:var(--text-secondary);">Borrow history</div>
+            <div style="font-size:18px;font-weight:700;color:var(--accent);">{{ borrowed_count }}</div>
+          </div>
+        </div>
+      </div>
+
+      {% if recommendations %}
+        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;margin-bottom:16px;">
+          <div>
+            <h3 style="font-family:'Cinzel',serif;font-size:18px;font-weight:700;">Recommended Titles</h3>
+            <p style="margin-top:6px;font-size:13px;color:var(--text-secondary);">Personalized suggestions for the selected member.</p>
+          </div>
+          <span class="badge badge-success" style="font-size:12px;padding:10px 14px;">{{ recommendations|length }} titles</span>
+        </div>
+
+        <div class="rec-grid">
+          {% for book in recommendations %}
+          <div class="rec-card">
+            <div class="rec-cat">{{ book.category }}</div>
+            <div class="rec-title">{{ book.title }}</div>
+            <div class="rec-author">{{ book.author }}</div>
+            <div style="margin-top:10px;display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;">
+              {% if book.copies_available is defined and book.copies_available > 0 %}
+                <span class="badge badge-success" style="font-size:10px"><i class="fas fa-check"></i> Available</span>
+              {% elif book.copies_available is defined %}
+                <span class="badge badge-danger" style="font-size:10px">Unavailable</span>
+              {% endif %}
+              {% if book.score is defined %}
+              <span style="font-size:11px;color:var(--text-secondary);">Score: <strong style="color:var(--accent)">{{ book.score }}</strong></span>
+              {% endif %}
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      {% else %}
+        <div class="card" style="padding:40px 24px;">
+          <div class="empty-state">
+            <i class="fas fa-book-reader"></i>
+            <p style="margin-top:10px;font-size:16px;font-weight:600">No personalized titles found</p>
+            <p style="font-size:13px;color:var(--text-muted);margin-top:8px;max-width:440px;">The selected member has no recent borrow activity. Try selecting another member or add more borrow history to improve recommendations.</p>
+          </div>
+        </div>
+      {% endif %}
+    {% else %}
+      <div class="card" style="padding:40px 24px;">
+        <div class="empty-state">
+          <i class="fas fa-search" style="opacity:0.4"></i>
+          <p style="margin-top:10px;font-size:16px;font-weight:600">Start with a member</p>
+          <p style="font-size:13px;color:var(--text-muted);margin-top:8px;max-width:440px;">Choose a member to review curated book recommendations from their borrow history.</p>
+        </div>
+      </div>
+    {% endif %}
+  </div>
+</div>
+
+{% endblock %}

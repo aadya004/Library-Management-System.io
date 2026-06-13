@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+{% block title %}Users – LibraCore{% endblock %}
+{% block page_title %}User Management{% endblock %}
+{% block content %}
+<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:22px;flex-wrap:wrap;gap:12px;">
+  <div>
+    <h2 style="font-family:'Cinzel',serif;font-size:22px;font-weight:700">Members</h2>
+    <p style="color:var(--text-secondary);font-size:13px;margin-top:2px">{{ users|length }} registered members</p>
+  </div>
+  <div style="display:flex;gap:10px;flex-wrap:wrap;">
+    <button onclick="document.getElementById('importModal').classList.add('open')" class="btn btn-ghost"><i class="fas fa-file-import"></i> Bulk Import</button>
+    <a href="/users/add" class="btn btn-primary"><i class="fas fa-user-plus"></i> Add User</a>
+  </div>
+</div>
+
+<div class="card">
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>ID</th><th>Name</th><th>Email</th><th>Phone</th><th>Type</th><th>Joined</th><th>Active Borrows</th><th>Actions</th></tr></thead>
+      <tbody>
+        {% for user in users %}
+        <tr>
+          <td style="font-family:monospace;font-size:12px;color:var(--text-secondary)">{{ user.id }}</td>
+          <td><strong>{{ user.name }}</strong></td>
+          <td style="color:var(--text-secondary)">{{ user.email }}</td>
+          <td style="color:var(--text-secondary)">{{ user.phone or '—' }}</td>
+          <td>
+            <span class="badge {% if user.member_type == 'Faculty' %}badge-warning{% else %}badge-info{% endif %}">{{ user.member_type }}</span>
+          </td>
+          <td style="color:var(--text-secondary)">{{ user.joined_date[:10] }}</td>
+          <td>
+            {% if user.active_borrows > 0 %}
+              <span class="badge badge-success">{{ user.active_borrows }}</span>
+            {% else %}
+              <span style="color:var(--text-muted)">0</span>
+            {% endif %}
+          </td>
+          <td>
+            <div style="display:flex;gap:6px">
+              <a href="/users/edit/{{ user.id }}" class="btn btn-ghost btn-sm"><i class="fas fa-pen"></i></a>
+              <form method="post" action="/users/delete/{{ user.id }}" onsubmit="return confirm('Remove this user?')">
+                <button type="submit" class="btn btn-danger btn-sm"><i class="fas fa-trash"></i></button>
+              </form>
+            </div>
+          </td>
+        </tr>
+        {% else %}
+        <tr><td colspan="8"><div class="empty-state"><i class="fas fa-users"></i><p>No users registered yet.</p></div></td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Bulk Import Modal -->
+<div class="modal-backdrop" id="importModal">
+  <div class="modal">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
+      <div class="modal-title"><i class="fas fa-file-import" style="color:var(--accent)"></i> Bulk Import Users</div>
+      <button onclick="document.getElementById('importModal').classList.remove('open')" class="btn btn-ghost btn-sm"><i class="fas fa-xmark"></i></button>
+    </div>
+    <div style="background:var(--bg-dark);border:1px solid var(--border);border-radius:8px;padding:14px;margin-bottom:16px;font-size:12px;color:var(--text-secondary)">
+      <strong style="color:var(--text-primary)">CSV Format:</strong><br>
+      <code style="color:var(--accent2)">name, email, phone, member_type</code><br><br>
+      <strong style="color:var(--text-primary)">Example:</strong><br>
+      <code>Jane Doe, jane@university.edu, +91 98765 43210, Student</code>
+    </div>
+    <div class="upload-zone" onclick="document.getElementById('userFile').click()">
+      <i class="fas fa-cloud-arrow-up" style="display:block;margin:0 auto 10px;font-size:30px;color:var(--text-muted)"></i>
+      <p style="color:var(--text-secondary);font-size:13px">Click to upload CSV file</p>
+      <p id="fileName2" style="color:var(--accent);font-size:12px;margin-top:6px"></p>
+    </div>
+    <input type="file" id="userFile" accept=".csv" style="display:none" onchange="document.getElementById('fileName2').textContent=this.files[0]?.name||''">
+    <div id="importResult2" style="margin-top:12px;font-size:13px"></div>
+    <div style="display:flex;gap:10px;margin-top:18px;justify-content:flex-end">
+      <button onclick="document.getElementById('importModal').classList.remove('open')" class="btn btn-ghost">Cancel</button>
+      <button onclick="doBulkImportUsers()" class="btn btn-primary"><i class="fas fa-upload"></i> Import</button>
+    </div>
+  </div>
+</div>
+<script>
+async function doBulkImportUsers() {
+  const file = document.getElementById('userFile').files[0];
+  if (!file) { alert('Please select a CSV file.'); return; }
+  const fd = new FormData();
+  fd.append('file', file);
+  const res = await fetch('/users/bulk_import', { method: 'POST', body: fd });
+  const data = await res.json();
+  const el = document.getElementById('importResult2');
+  if (data.added > 0) {
+    el.innerHTML = `<div class="flash flash-success"><i class="fas fa-check"></i> ${data.added} users imported!</div>`;
+    setTimeout(() => location.reload(), 1500);
+  }
+  if (data.errors?.length) {
+    el.innerHTML += data.errors.map(e => `<div class="flash flash-error">${e}</div>`).join('');
+  }
+}
+</script>
+{% endblock %}
